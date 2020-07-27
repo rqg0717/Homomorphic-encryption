@@ -6,7 +6,7 @@ import (
 	"math/big"
 )
 
-var bitLength int = 16 // not able to handle 32-bit? seriously?!
+var bitLength int = 16
 
 //p and q are two random primes.
 //lambda = lcm(p-1, q-1).
@@ -64,8 +64,8 @@ func Encryption(m *big.Int) big.Int {
 	fmt.Println("n: ", n)
 	fmt.Println("r: ", r)
 	fmt.Println("rn: ", rn)
-	gm.Exp(&g, m, nil)
-	rn.Exp(&rn, &n, nil) // <- problem here not able to handle big numbers...
+	gm.Exp(&g, m, &nsqr)
+	rn.Exp(&rn, &n, &nsqr)
 	em.Mul(&gm, &rn)
 	em.Mod(&em, &nsqr)
 	return em
