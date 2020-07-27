@@ -59,12 +59,13 @@ func Encryption(m *big.Int) big.Int {
 	var em, gm, rn big.Int
 	//generates random input r
 	r := genCoPrime(m)
+	rn.Set(r)
 	fmt.Println("g: ", g)
 	fmt.Println("n: ", n)
+	fmt.Println("r: ", r)
+	fmt.Println("rn: ", rn)
 	gm.Exp(&g, m, nil)
-
-	r = big.NewInt(0).Exp(r, &n, nil) // <- problem here not able to handle big numbers...
-	rn = *r
+	rn.Exp(&rn, &n, nil) // <- problem here not able to handle big numbers...
 	em.Mul(&gm, &rn)
 	em.Mod(&em, &nsqr)
 	return em
@@ -89,6 +90,11 @@ func Decryption(em *big.Int) big.Int {
 }
 
 func main() {
+	z := big.NewInt(0)
+	x := big.NewInt(54493)
+	y := big.NewInt(2636432291)
+	z.Exp(x, y, nil)
+
 	KeyGeneration()
 	m := big.NewInt(11)
 	em := Encryption(m)
