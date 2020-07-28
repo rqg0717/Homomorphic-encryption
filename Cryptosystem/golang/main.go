@@ -83,10 +83,23 @@ func Decryption(em *big.Int) big.Int {
 }
 
 func main() {
+	var em1em2, m1m2 big.Int
 	KeyGeneration()
-	m := big.NewInt(11)
-	em := Encryption(m)
-	dm := Decryption(&em)
-	fmt.Println("Encryption: ", em)
-	fmt.Println("Decryption: ", dm)
+	m1 := big.NewInt(11)
+	m2 := big.NewInt(5)
+	em1 := Encryption(m1)
+	dm1 := Decryption(&em1)
+	fmt.Println("Encryption of m1: ", em1)
+	fmt.Println("Decryption of m1: ", dm1)
+	em2 := Encryption(m2)
+	dm2 := Decryption(&em2)
+	fmt.Println("Encryption of m2: ", em2)
+	fmt.Println("Decryption of m2: ", dm2)
+	// tests homomorphic properties: D(E(m1)*E(m2) mod n^2) = (m1 + m2) mod n
+	em1em2.Mul(&em1, &em2)
+	em1em2.Mod(&em1em2, &nsqr)
+	m1m2.Add(m1, m2)
+	m1m2.Mod(&m1m2, &n)
+	fmt.Println("Sum of m1 and m2: ", m1m2)
+	fmt.Println("Sum of em1 and em2: ", Decryption(&em1em2))
 }
