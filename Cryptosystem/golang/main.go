@@ -6,7 +6,7 @@ import (
 	"math/big"
 )
 
-var bitLength int = 16
+var bitLength int = 256
 
 //p and q are two random primes.
 //lambda = lcm(p-1, q-1).
@@ -59,13 +59,8 @@ func Encryption(m *big.Int) big.Int {
 	var em, gm, rn big.Int
 	//generates random input r
 	r := genCoPrime(m)
-	rn.Set(r)
-	fmt.Println("g: ", g)
-	fmt.Println("n: ", n)
-	fmt.Println("r: ", r)
-	fmt.Println("rn: ", rn)
 	gm.Exp(&g, m, &nsqr)
-	rn.Exp(&rn, &n, &nsqr)
+	rn.Exp(r, &n, &nsqr)
 	em.Mul(&gm, &rn)
 	em.Mod(&em, &nsqr)
 	return em
@@ -75,13 +70,11 @@ func Encryption(m *big.Int) big.Int {
 // where u = (L(g^lambda mod n^2))^(-1) mod n.
 func Decryption(em *big.Int) big.Int {
 	var m, u big.Int
-	fmt.Println("g: ", g)
-	fmt.Println("lambda: ", lambda)
-	u.Exp(&g, &lambda, nil)
+	u.Exp(&g, &lambda, &nsqr)
 	u.Sub(&u, big.NewInt(1))
 	u.Div(&u, &n)
 	u.ModInverse(&u, &n)
-	m.Exp(em, &lambda, nil)
+	m.Exp(em, &lambda, &nsqr)
 	m.Sub(&m, big.NewInt(1))
 	m.Div(&m, &n)
 	m.Mul(&m, &u)
@@ -90,11 +83,6 @@ func Decryption(em *big.Int) big.Int {
 }
 
 func main() {
-	z := big.NewInt(0)
-	x := big.NewInt(54493)
-	y := big.NewInt(2636432291)
-	z.Exp(x, y, nil)
-
 	KeyGeneration()
 	m := big.NewInt(11)
 	em := Encryption(m)
