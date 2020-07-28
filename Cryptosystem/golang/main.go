@@ -41,13 +41,13 @@ func KeyGeneration() {
 // that gcd(number, this) = 1
 func genCoPrime(this *big.Int) *big.Int {
 	var done int = 0
+	var gcd big.Int
 	var result *big.Int
 	for done == 0 {
 		result, _ = rand.Prime(rand.Reader, bitLength)
 		// gcd test
-		gcd := big.NewInt(0)
 		gcd.GCD(nil, nil, result, this)
-		if gcd.Int64() == int64(1) {
+		if gcd.Cmp(big.NewInt(1)) == 0 {
 			done = 1
 		}
 	}
@@ -85,15 +85,15 @@ func Decryption(em *big.Int) big.Int {
 func main() {
 	var em1em2, m1m2 big.Int
 	KeyGeneration()
-	m1 := big.NewInt(11)
-	m2 := big.NewInt(5)
+	m1 := big.NewInt(1981)
+	m2 := big.NewInt(1983)
 	em1 := Encryption(m1)
 	dm1 := Decryption(&em1)
-	fmt.Println("Encryption of m1: ", em1)
+	fmt.Println("Encryption of em1: ", em1)
 	fmt.Println("Decryption of m1: ", dm1)
 	em2 := Encryption(m2)
 	dm2 := Decryption(&em2)
-	fmt.Println("Encryption of m2: ", em2)
+	fmt.Println("Encryption of em2: ", em2)
 	fmt.Println("Decryption of m2: ", dm2)
 	// tests homomorphic properties: D(E(m1)*E(m2) mod n^2) = (m1 + m2) mod n
 	em1em2.Mul(&em1, &em2)
