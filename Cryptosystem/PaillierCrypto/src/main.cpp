@@ -84,25 +84,39 @@ void KeyGeneration()
 	mpz_clrbit(p, 0);
 	mpz_clrbit(q, 0);
 	mpz_lcm(lambda, p, q);
+	mpz_clear(temp);
+}
+
+void cleanup()
+{
+	mpz_clear(lambda);
+	mpz_clear(p);
+	mpz_clear(q);
+	mpz_clear(n);
+	mpz_clear(g);
+	mpz_clear(nsqr);
 }
 
 int main(int argc, char *argv[])
 {
 	struct timespec ts_start, ts_end;
 
-	KeyGeneration();
-
-
 	printf("*********************** C performance test *********************** \n\n");
 
 	clock_gettime(CLOCK_MONOTONIC, &ts_start);
 
+	KeyGeneration();
 
+
+	cleanup();
 
 	clock_gettime(CLOCK_MONOTONIC, &ts_end);
+
 	printf("C time elapsed in microsecond: %.3f \n\n", ( ts_end.tv_nsec - ts_start.tv_nsec ) / THOUSAND);
 
 	printf("*********************** End of test *********************** \n");
+
+
 
 	return 0;
 }
