@@ -17,7 +17,8 @@ using namespace std;
 #define THOUSAND 	1000.0
 #define DEC			10
 
-/** Private key
+/**
+ *  Private key
  *	p and q are two random primes.
  *	lambda = lcm(p-1, q-1).
  *	n = p * q.
@@ -46,7 +47,8 @@ string* trim(string* str, const string& chars = "\t\n\v\f\r ") {
 	return ltrim(rtrim(str, chars), chars);
 }
 
-/** Generates the public key and private key.
+/**
+ *  Generates the public key and private key.
  *
  */
 void KeyGeneration() {
@@ -86,7 +88,8 @@ void KeyGeneration() {
 	mpz_clear(temp);
 }
 
-/** Generates a random number with the specified number of bits
+/**
+ *  Generates a random number with the specified number of bits
  *  such that gcd(number, this) = 1
  */
 void genCoPrime(mpz_t r, mpz_t m) {
@@ -115,7 +118,8 @@ void genCoPrime(mpz_t r, mpz_t m) {
 
 }
 
-/** Encrypts plaintext m. Ciphertext em = g^m * r^n mod n^2.
+/**
+ *  Encrypts plaintext m. Ciphertext em = g^m * r^n mod n^2.
  *
  */
 void Encrypt(mpz_t m, mpz_t em) {
@@ -139,7 +143,8 @@ void Encrypt(mpz_t m, mpz_t em) {
 
 }
 
-/** Decrypts ciphertext em. Plaintext m = L(c^lambda mod n^2) * u mod n
+/**
+ *  Decrypts ciphertext em. Plaintext m = L(c^lambda mod n^2) * u mod n
  *  where u = (L(g^lambda mod n^2))^(-1) mod n.
  */
 void Decrypt(mpz_t m, mpz_t em) {

@@ -1,2 +1,4 @@
 *.exe
 *.stackdump
+/obj
+/bin
