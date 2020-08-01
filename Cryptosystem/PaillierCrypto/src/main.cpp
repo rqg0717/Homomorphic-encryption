@@ -13,8 +13,9 @@
 #include <gmp.h>
 using namespace std;
 
-#define BILLION 1E9
-#define THOUSAND 1000.0
+#define BILLION 	1E9
+#define THOUSAND 	1000.0
+#define DEC			10
 
 /** Private key
  *	p and q are two random primes.
@@ -29,7 +30,7 @@ mpz_t p, q; /* prime numbers */
 mpz_t n, nsqr; /* Public key */
 mpz_t g; /* a random BigInteger in Z*_{n^2} where gcd (L(g^lambda mod n^2), n) = 1. */
 
-mpz_t msg, emsg;
+mpz_t msg1, emsg1, msg2, emsg2;
 
 string* ltrim(string* str, const string& chars = "\t\n\v\f\r ") {
 	str->erase(0, str->find_first_not_of(chars));
@@ -96,7 +97,7 @@ void genCoPrime(mpz_t r, mpz_t m) {
 
 	while (!done) {
 		/* Generates random input r. */
-		buf[0] |= 0x01;
+		buf[0] |= 0xFF;
 		for (i = 1; i < byteLength - 1; i++) {
 			buf[i] = rand() % 0xFF;
 		}
@@ -163,34 +164,76 @@ void Cleanup() {
 	mpz_clear(n);
 	mpz_clear(g);
 	mpz_clear(nsqr);
-	mpz_clear(msg);
-	mpz_clear(emsg);
+	mpz_clear(msg1);
+	mpz_clear(emsg1);
+	mpz_clear(msg2);
+	mpz_clear(emsg2);
 }
 
 void Encryption() {
-	mpz_init(msg);
-	mpz_init(emsg);
+	mpz_init(msg1);
+	mpz_init(emsg1);
+	mpz_init(msg2);
+	mpz_init(emsg2);
 
-	mpz_set_ui(msg, 1981);
-	printf(" plain message = ");
-	mpz_out_str(stdout, 10, msg);
+	mpz_set_ui(msg1, 1981);
+	mpz_set_ui(msg2, 1983);
+	printf(" plain message1 = ");
+	mpz_out_str(stdout, DEC, msg1);
+	printf("\n");
+	printf(" plain message2 = ");
+	mpz_out_str(stdout, DEC, msg2);
 	printf("\n");
 
-	Encrypt(msg, emsg);
-	printf(" encrypted message = ");
-	mpz_out_str(stdout, 10, emsg);
+	Encrypt(msg1, emsg1);
+	printf(" encrypted message1 = ");
+	mpz_out_str(stdout, DEC, emsg1);
+	printf("\n");
+
+	Encrypt(msg2, emsg2);
+	printf(" encrypted message2 = ");
+	mpz_out_str(stdout, DEC, emsg2);
 	printf("\n");
 }
 
 void Decryption() {
-	mpz_set_ui(msg, 0);
+	mpz_set_ui(msg1, 0);
+	mpz_set_ui(msg2, 0);
 
-	Decrypt(msg, emsg);
-
-	printf(" original message = ");
-	mpz_out_str(stdout, 10, msg);
+	Decrypt(msg1, emsg1);
+	printf(" original message1 = ");
+	mpz_out_str(stdout, DEC, msg1);
 	printf("\n");
 
+	Decrypt(msg2, emsg2);
+	printf(" original message2 = ");
+	mpz_out_str(stdout, DEC, msg2);
+	printf("\n");
+
+}
+
+/* tests homomorphic properties: D(E(m1)*E(m2) mod n^2) = (m1 + m2) mod n */
+void Test() {
+	mpz_t m1m2;
+	mpz_t em1em2;
+	mpz_init(m1m2);
+	mpz_init(em1em2);
+
+	mpz_add(m1m2, msg1, msg2);
+	mpz_mod(m1m2, m1m2, n);
+	printf(" Sum of msg1 and msg2 = ");
+	mpz_out_str(stdout, DEC, m1m2);
+	printf("\n");
+
+	mpz_mul(em1em2, emsg1, emsg2);
+	mpz_mod(em1em2, em1em2, nsqr);
+	Decrypt(m1m2, em1em2);
+	printf(" Sum of emsg1 and emsg2 = ");
+	mpz_out_str(stdout, DEC, m1m2);
+	printf("\n");
+
+	mpz_clear(m1m2);
+	mpz_clear(em1em2);
 }
 
 int main(int argc, char *argv[]) {
@@ -205,6 +248,8 @@ int main(int argc, char *argv[]) {
 	Encryption();
 
 	Decryption();
+
+	Test();
 
 	Cleanup();
 
