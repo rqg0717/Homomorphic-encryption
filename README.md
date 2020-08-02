@@ -8,6 +8,8 @@
  ![](https://github.com/rqg0717/Homomorphic-encryption/blob/master/Homomorphic%20Encryption.png)
  
  
+ Paillier cryptosystem is a homomorphic cryptosystem using probabilistic asymmetric algorithm for public key cryptography. It is invented by and named after Pascal Paillier in 1999.
+ 
  [PaillierCrypto in C](https://github.com/rqg0717/Homomorphic-encryption/tree/master/Cryptosystem/PaillierCrypto)
  
  [PaillierCrypto in C#](https://github.com/rqg0717/Homomorphic-encryption/tree/master/Cryptosystem/Paillier)
