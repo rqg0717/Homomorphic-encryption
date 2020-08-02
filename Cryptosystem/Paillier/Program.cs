@@ -39,8 +39,8 @@ namespace Paillier
             Console.WriteLine("\n-= Homomorphic properties: Homomorphic multiplication of plaintexts =-\n");
             BigInteger em2modpowm4 = em2.modPow(m4, paillier.nsqr);
             BigInteger m2xm4 = (m2 * m4) % paillier.n;
-            Console.WriteLine("\noriginal sum:" + Convert.ToString(m2xm4));
-            Console.WriteLine("\ndecrypted sum:" + Convert.ToString(paillier.Decryption(em2modpowm4)));
+            Console.WriteLine("\noriginal multiplication:" + Convert.ToString(m2xm4));
+            Console.WriteLine("\ndecrypted multiplication:" + Convert.ToString(paillier.Decryption(em2modpowm4)));
 
         }
     }
